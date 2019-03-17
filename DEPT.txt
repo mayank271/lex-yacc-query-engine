@@ -1,0 +1,4 @@
+dnum 1, dname Sales, dlocation 402, Floor 1, Block-A, Colony abc, OneCity, India
+dnum 2, dname Sales, dlocation 212, Floor 11, Block-D, Colony acd, ThreeCity, India
+dnum 3, dname Sales, dlocation 2, Floor 13, Block-B, Colony bcd, OneCity, India
+dnum 4, dname Sales, dlocation 22, Floor 2, Block-C, Colony cad, TwoCity, India
