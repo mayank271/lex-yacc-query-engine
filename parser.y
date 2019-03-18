@@ -5,7 +5,7 @@
 %}
 %token AND DELETE FROM GET ID INSERT INTO NUM OR SET UPDATE WHERE EQUAL NE GT GE LT LE
 %%
-stmt: GET FROM ID COLON
+stmt: GET ' ' FROM ' ' ID
 %%
 void main()
 {
