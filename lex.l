@@ -2,7 +2,7 @@
 //Lex file: returns token to the parser
 #include "y.tab.h"
 %}
-AND [aA][nN]dD]
+AND [aA][nN][dD]
 COLON [;]
 COMMA [,]
 DELETE [dD][eE][lL][eE][tT][eE][ ]*[rR][eE][cC][oO][rR][dD]
