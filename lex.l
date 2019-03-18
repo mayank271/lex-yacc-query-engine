@@ -24,7 +24,7 @@ LE (<=)
 %%
 [\t\n]
 {AND} return AND;
-{COLON} return COLON;
+{COLON} return 0;
 {DELETE} return DELETE;
 {FROM} return FROM;
 {GET} return GET;
