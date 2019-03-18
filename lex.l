@@ -1,5 +1,6 @@
 %{
 //Lex file: returns token to the parser
+#include "y.tab.h"
 %}
 AND [aA][nN]dD]
 COLON [;]
