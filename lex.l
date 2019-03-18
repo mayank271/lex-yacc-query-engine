@@ -4,7 +4,8 @@
 %}
 AND [aA][nN]dD]
 COLON [;]
-DELETE [dD][eE][lL][eE][tT][eE][ ][rR][eE][cC][oO][rR][dD][ ][fF][rR][oO][mM]
+COMMA [,]
+DELETE [dD][eE][lL][eE][tT][eE][ ][rR][eE][cC][oO][rR][dD]
 FROM [fF][rR][oO][mM]
 GET [gG][eE][tT]
 ID [_A-Za-z][_A-Za-z0-9$]*
@@ -13,6 +14,7 @@ INTO [)][iI][nN][tT][oO]
 NUM [1-9][0-9]*
 OR [oO][rR]
 SET [sS][eE][tT]
+SPACE [ ]
 TO [tT][Oo]
 UPDATE [uU][pP][dD][aA][tT][eE][ ][rR][eE][cC][oO][rR][dD][ ][iI][nN]
 WHERE [wW][hH][eE][rR][eE]
@@ -26,6 +28,7 @@ LE (<=)
 [\t\n]
 {AND} return AND;
 {COLON} return 0;
+{COMMA} return COMMA;
 {DELETE} return DELETE;
 {FROM} return FROM;
 {GET} return GET;
@@ -34,6 +37,7 @@ LE (<=)
 {NUM} return NUM;
 {OR} return OR;
 {SET} return SET;
+{SPACE} return SPACE;
 {TO} return TO;
 {UPDATE} return UPDATE;
 {WHERE} return WHERE;
