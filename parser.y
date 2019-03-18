@@ -1,5 +1,7 @@
 %{
 //Parser file
+#include<stdio.h>
+#include<stdlib.h>
 %}
 %token AND COLON DELETE FROM GET ID INSERT INTO NUM OR SET UPDATE WHERE EQUAL NE GT GE LT LE
 %%
