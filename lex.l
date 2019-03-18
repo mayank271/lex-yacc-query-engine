@@ -8,8 +8,8 @@ DELETE [dD][eE][lL][eE][tT][eE][ ][rR][eE][cC][oO][rR][dD][ ][fF][rR][oO][mM]
 FROM [fF][rR][oO][mM]
 GET [gG][eE][tT]
 ID [_A-Za-z][_A-Za-z0-9$]*
-INSERT [iI][nN][sS][eE][rR][tT][ ][rR][eE][cC][oO][rR][dD]
-INTO [iI][nN][tT][oO]
+INSERT [iI][nN][sS][eE][rR][tT][ ][rR][eE][cC][oO][rR][dD][(]
+INTO [)][iI][nN][tT][oO]
 NUM [1-9][0-9]*
 OR [oO][rR]
 SET [sS][eE][tT]
