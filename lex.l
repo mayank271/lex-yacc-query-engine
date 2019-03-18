@@ -14,7 +14,7 @@ INTO [)][iI][nN][tT][oO]
 NUM [1-9][0-9]*
 OR [oO][rR]
 SET [sS][eE][tT]
-SPACE [ ]
+SPACE [ ]+
 TO [tT][Oo]
 UPDATE [uU][pP][dD][aA][tT][eE][ ][rR][eE][cC][oO][rR][dD][ ][iI][nN]
 WHERE [wW][hH][eE][rR][eE]
