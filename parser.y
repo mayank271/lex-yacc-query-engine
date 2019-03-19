@@ -3,9 +3,14 @@
 #include<stdio.h>
 #include<stdlib.h>
 %}
-%token AND COMMA DELETE FROM GET ID INSERT INTO NUM OR SET SPACE TO UPDATE WHERE EQUAL NE GT GE LT LE
+%union {
+	int ival;
+	char *sval;
+}
+%token <sval> AND COMMA DELETE FROM GET ID INSERT INTO OR SET SPACE TO UPDATE WHERE EQUAL NE GT GE LT LE
+%token <ival> NUM
 %%
-stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {char* fname=malloc(sizeof(char)*(strlen($8)+4); strcpy(fname, $8); strcat(fname, '.txt'); printf("%s", fname);}
+stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {printf("%s", $8);/*char* fname=malloc(sizeof(char)*(strlen($8)+4); strcpy(fname, $8); strcat(fname, '.txt'); printf("%s", fname);*/}
   | S INSERT S FIELDS S INTO S ID S {/**/}
   | S UPDATE S ID S SET S ID S TO S NEWVAL S WHERE S CONDITIONS S {/**/}
   | S DELETE S FROM S ID S WHERE S CONDITIONS S {/**/}
