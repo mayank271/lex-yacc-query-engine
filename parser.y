@@ -2,6 +2,15 @@
 //Parser file
 #include<stdio.h>
 #include<stdlib.h>
+struct Record{
+	int id; //dnum, eid
+	char* name; //dname, ename
+	char* address; //dlocatoin, eaddress
+	int egae;
+	int salary;
+	int deptno;
+	struct Record *next;
+}
 %}
 %union {
 	int ival;
@@ -17,8 +26,10 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 	FILE *fp;
 	fp = fopen(fname, "r");
 	int c;
+	struct Record *node = NULL;
+	struct Record *temp
 	do{
-	c = fgets(fp);
+	c = fgetc(fp);
 	if(feof(fp)){
 		break;
 	}
