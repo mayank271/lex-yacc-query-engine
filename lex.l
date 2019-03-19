@@ -19,6 +19,7 @@ SET [sS][eE][tT]
 SPACE [ ]+
 TO [tT][Oo]
 UPDATE [uU][pP][dD][aA][tT][eE][ ]*[rR][eE][cC][oO][rR][dD][ ]*[iI][nN]
+VALUE [\"].*[\"]
 WHERE [wW][hH][eE][rR][eE]
 EQUAL [=]
 NE (!=)
