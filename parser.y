@@ -18,7 +18,7 @@ struct Record* head = NULL;
 	int ival;
 	char *sval;
 }
-%token <sval> AND COMMA DELETE FROM GET ID INSERT INTO OR SET SPACE TO UPDATE WHERE EQUAL NE GT GE LT LE
+%token <sval> AND COMMA DELETE FROM GET ID INSERT INTO OR SET SPACE TO UPDATE WHERE EQUAL NE GT GE LT LE VALUE
 %token <ival> NUM
 %%
 stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
@@ -111,10 +111,16 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 //		head = head->next;
 //	}
 	}
-  | S INSERT S FIELDS S INTO S ID S {/**/}
+  | S INSERT S VALUES S INTO S ID S {/**/}
   | S UPDATE S ID S SET S ID S TO S NEWVAL S WHERE S CONDITIONS S {/**/}
   | S DELETE S FROM S ID S WHERE S CONDITIONS S {/**/}
   ;
+VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
+    // dname, dname, dlocation
+    }
+  | NUM S COMMA S VALUE S COMMA S NUM S COMMA S VALUE S COMMA S NUM S COMMA S NUM {
+    // eid, ename, egae, eaddress, salary, deptno
+    }
 FIELDS: FIELDS S COMMA S ID {/**/}
   | ID {/**/}
   ;
