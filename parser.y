@@ -15,12 +15,15 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 	char* fname=malloc(sizeof(char)*(strlen($8)+4)); strcpy(fname, $8); strcat(fname, ".txt"); //printf("%s", fname);
 	//Initialize data
 	FILE *fp;
-	char buff[255];
 	fp = fopen(fname, "r");
-	fscanf(fp, "%s", buff);
-	printf("1: %s\n", buff);
-	fgets(buff, 255, (FILE*)fp);
-	printf("2: %s\n", buff);
+	int c;
+	do{
+	c = fgets(fp);
+	if(feof(fp)){
+		break;
+	}
+	printf("%c", c);
+	}while(1);
 	fclose(fp);
 	}
   | S INSERT S FIELDS S INTO S ID S {/**/}
