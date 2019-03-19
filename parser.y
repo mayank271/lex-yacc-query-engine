@@ -12,7 +12,7 @@
 %%
 stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 	//Get filename from the query
-	char* fname=malloc(sizeof(char)*(strlen($8)+4); strcpy(fname, $8); strcat(fname, '.txt'); //printf("%s", fname);
+	char* fname=malloc(sizeof(char)*(strlen($8)+4)); strcpy(fname, $8); strcat(fname, ".txt"); //printf("%s", fname);
 	//Initialize data
 	FILE *fp;
 	char buff[255];
