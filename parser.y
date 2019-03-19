@@ -12,6 +12,15 @@ struct Record{
 	int deptno;
 	struct Record *next;
 };
+// variables for conditions
+int min_id=0, max_id=200000000;
+int min_egae=0, max_eage=200000000;
+int min_salary=0, max_salary=200000000;
+int min_deptno=0, max_deptno=200000000;
+char* ex_name;
+int eq_name=0; //checking for equality if 0
+char* ex_address;
+int eq_address=0; //checking for equality if 0
 
 struct Record* head = NULL;
 %}
@@ -163,18 +172,42 @@ FIELDS: FIELDS S COMMA S ID {/**/}
 NEWVAL: ID {/**/}
   | NUM {/**/}
   ;
-CONDITIONS: CONDITIONS S AND S CONDITION {/**/}
-  | CONDITIONS S OR S CONDITION {/**/}
-  | CONDITION {/**/}
+CONDITIONS: CONDITIONS S AND S CONDITION {
+		//TO BE IMPLEMENTED
+	}
+  | CONDITIONS S OR S CONDITION {
+		//TO BE IMPLEMENTED
+	}
+  | CONDITION {
+		
+	}
   ;
-CONDITION: ID S EQUAL S ID {/**/}
-  | ID S NE S ID {/**/}
-  | ID S EQUAL S NUM {/**/}
-  | ID S NE S NUM {/**/}
-  | ID S GT S NUM {/**/}
-  | ID S GE S NUM {/**/}
-  | ID S LT S NUM {/**/}
-  | ID S LE S NUM {/**/}
+CONDITION: ID S EQUAL S ID {
+		//check for which field is being talked about
+		//the second ID is the expected value, store it in ex_name or ex_address
+	}
+  | ID S NE S ID {
+		//same as above
+		//change eq_[param] to 1
+	}
+  | ID S EQUAL S NUM {
+		//set min_[param] and max[param] to the NUM value
+	}
+  | ID S NE S NUM {
+		//set min_[param] to NUM value and make max_[param] -1 (check this cond)
+	}
+  | ID S GT S NUM {
+		//set min_[param] to NUM value + 1
+	}
+  | ID S GE S NUM {
+		//set min_[param] to NUM value
+	}
+  | ID S LT S NUM {
+		//set max_[param] to NUM value - 1
+	}
+  | ID S LE S NUM {
+		//set max_[param] to NUM value
+	}
   ;
 S: SPACE
   |
