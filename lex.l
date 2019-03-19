@@ -1,4 +1,6 @@
 %{
+#include<stdio.h>
+#include<stdlib.h>
 //Lex file: returns token to the parser
 #include "y.tab.h"
 %}
@@ -34,7 +36,7 @@ LE (<=)
 {GET} return GET;
 {INSERT} return INSERT;
 {INTO} return INTO;
-{NUM} return NUM;
+{NUM} {yylval.ival = atoi(yytext); return NUM;}
 {OR} return OR;
 {SET} return SET;
 {TO} return TO;
@@ -47,5 +49,9 @@ LE (<=)
 {GE} return GE;
 {LT} return LT;
 {LE} return LE;
-{ID} return ID;
+{ID} {  char *res = (char *)malloc(sizeof(char)*(strlen(yytext) + 1));
+	strcpy(res, yytext);
+	yylval.sval = res;
+	return ID;
+         }
 . return yytext[0];
