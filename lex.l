@@ -42,7 +42,11 @@ LE (<=)
 {SET} return SET;
 {TO} return TO;
 {UPDATE} return UPDATE;
-{VALUE} return VALUE;
+{VALUE} { char *res = (char *)malloc(sizeof(char)*(strlen(yytext) + 1));
+	strcpy(res, yytext);
+	yylval.sval = res;
+	return VALUE;
+	}
 {WHERE} return WHERE;
 {EQUAL} return EQUAL;
 {SPACE} return SPACE;
