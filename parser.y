@@ -1,6 +1,7 @@
 %{
 //Parser file
 #include<stdio.h>
+#include<string.h>
 #include<stdlib.h>
 struct Record{
 	int id; //dnum, eid
@@ -117,6 +118,11 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
   ;
 VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
     // dname, dname, dlocation
+    //convert nums to string
+    int dnum = $1;
+    char s1[12];
+    sprintf(s1, "%d", dnum);
+    printf("%s", s1);
     }
   | NUM S COMMA S VALUE S COMMA S NUM S COMMA S VALUE S COMMA S NUM S COMMA S NUM {
     // eid, ename, egae, eaddress, salary, deptno
