@@ -21,6 +21,7 @@ struct Record* head = NULL;
 }
 %token <sval> AND COMMA DELETE FROM GET ID INSERT INTO OR SET SPACE TO UPDATE WHERE EQUAL NE GT GE LT LE VALUE
 %token <ival> NUM
+%type <sval> VALUES
 %%
 stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 	//Get filename from the query
@@ -112,17 +113,46 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 //		head = head->next;
 //	}
 	}
-  | S INSERT S VALUES S INTO S ID S {/**/}
+  | S INSERT S VALUES S INTO S ID S {
+	//Get filename from the query
+	char* fname=malloc(sizeof(char)*(strlen($8)+4)); strcpy(fname, $8); strcat(fname, ".txt");//printf("%s\n", fname); printf("%s\n", $4);
+	FILE *fp;
+	fp = fopen(fname, "a");
+	fprintf(fp, "%s\n",$4);
+	printf("Record succesfully inserted\n");
+	fclose(fp);
+	}
   | S UPDATE S ID S SET S ID S TO S NEWVAL S WHERE S CONDITIONS S {/**/}
   | S DELETE S FROM S ID S WHERE S CONDITIONS S {/**/}
   ;
 VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
-    // dname, dname, dlocation
+    // dnum, dname, dlocation
     //convert nums to string
-    int dnum = $1;
-    char s1[12];
-    sprintf(s1, "%d", dnum);
-    printf("%s", s1);
+	int dnum = $1;
+	char s1[12];
+	sprintf(s1, "%d", dnum);
+	char* dname_t=malloc(sizeof(char)*(strlen($5)+1));
+	dname_t = $5;
+	char* dname=malloc(sizeof(char)*(strlen($5)-1));	
+	for(int i=0;i<strlen($5)-2;i++){
+		dname[i] = dname_t[i+1];
+	}
+	char* dloc_t =malloc(sizeof(char)*(strlen($9)+1));
+	dloc_t = $9;
+	char* dloc=malloc(sizeof(char)*(strlen($9)-1));	
+	for(int i=0;i<strlen($9)-2;i++){
+		dloc[i] = dloc_t[i+1];
+	}
+	char* s=malloc(sizeof(char)*(5+strlen(s1)+2+6+strlen(dname)+2+10+strlen(dloc)+1));
+	strcpy(s, "dnum ");
+	strcat(s,s1);
+	strcat(s, ", ");
+	strcat(s, "dname ");
+	strcat(s, dname);
+	strcat(s, ", ");
+	strcat(s, "dlocation ");
+	strcat(s, dloc);
+	$$=s;
     }
   | NUM S COMMA S VALUE S COMMA S NUM S COMMA S VALUE S COMMA S NUM S COMMA S NUM {
     // eid, ename, egae, eaddress, salary, deptno
