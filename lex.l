@@ -19,7 +19,7 @@ SET [sS][eE][tT]
 SPACE [ ]+
 TO [tT][Oo]
 UPDATE [uU][pP][dD][aA][tT][eE][ ]*[rR][eE][cC][oO][rR][dD][ ]*[iI][nN]
-VALUE [\"].*[\"]
+VALUE [\"][^\"]*[\"]
 WHERE [wW][hH][eE][rR][eE]
 EQUAL [=]
 NE (!=)
@@ -42,6 +42,7 @@ LE (<=)
 {SET} return SET;
 {TO} return TO;
 {UPDATE} return UPDATE;
+{VALUE} return VALUE;
 {WHERE} return WHERE;
 {EQUAL} return EQUAL;
 {SPACE} return SPACE;
