@@ -425,6 +425,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 						}
 					}
 					if(ctemp->type == 0){
+						eval=curr_eval;
 						break;
 					}
 					ctemp = ctemp->left;
@@ -440,8 +441,8 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 						r->egae = temp->egae;
 						r->salary = temp->salary;
 						r->deptno = temp->deptno;
+						r->next = NULL;
 						results=r;
-						printf("%d %s %s %d %d %d \n",results->id, results->name, results->address, results->egae, results->salary, results->deptno);
 					}else{
 						if(tresults==NULL){
 							struct Record *r;
@@ -452,6 +453,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 							r->egae = temp->egae;
 							r->salary = temp->salary;
 							r->deptno = temp->deptno;
+							r->next = NULL;
 							tresults=r;
 							results->next= tresults;
 						}else{
@@ -463,6 +465,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 							r->egae = temp->egae;
 							r->salary = temp->salary;
 							r->deptno = temp->deptno;
+							r->next = NULL;
 							tresults->next=r;
 							tresults = tresults->next;
 						}
@@ -471,36 +474,50 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				temp = temp->next;
 				}
 			//print fields here
+			int dot=0;
 			if(display[0]==1){
 				if(strcmp(fname, "DEPT.txt")==0){
 					printf("DNUM ");
+					dot+=5;
 				}
 				else{
 					printf("EID ");
+					dot+=4;
 				}
 			}
 			if(display[1]==1){
 				if(strcmp(fname, "DEPT.txt")==0){
 					printf("DNAME ");
+					dot+=6;
 				}else{
 					printf("ENAME ");
+					dot+=6;
 				}
 			}
 			if(display[2]==1){
 				if(strcmp(fname, "DEPT.txt")==0){
 					printf("DLOCATION ");
+					dot+=10;
 				}else{
 					printf("EADDRESS ");
+					dot+=9;
 				}
 			}
 			if(display[3]==1){
 				printf("EGAE ");
+					dot+=5;
 			}
 			if(display[4]==1){
 				printf("SALARY ");
+					dot+=7;
 			}
 			if(display[5]==1){
 				printf("DEPTNO ");
+					dot+=7;
+			}
+			printf("\n");
+			for(int i=0;i<dot;i++){
+				printf("-");
 			}
 			printf("\n");
 			//Printing results
@@ -523,7 +540,10 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				if(display[5]==1){
 					printf("%d ",results->deptno);
 				}
-				printf("\n");				
+				printf("\n");
+				if(results->next == NULL){
+					break;
+				}
 				results = results->next;
 			}
 		}
