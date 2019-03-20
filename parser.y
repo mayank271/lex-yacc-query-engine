@@ -218,8 +218,8 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 			}
 			fclose(fp);
 			while(head!=NULL){
-				printf("sss\n");
 				printf("%d %s ", head->id, head->name);
+				printf("%s \n", head->address);
 				head = head->next;
 			}
 			
@@ -354,7 +354,7 @@ VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
     }
 FIELDS: FIELDS S COMMA S ID {
 	//HARDCODED VALUES FOR EACH STRCMP
-	char* id = malloc(sizeof(char)*(strlen($5)+1));
+	char* id = malloc(sizeof(char)*(strlen($5))+1);
 	id = $5;
 	if(strcmp(id, "dnum")==0){
 		display[0]=1;
@@ -386,7 +386,7 @@ FIELDS: FIELDS S COMMA S ID {
 	}
   | ID {
 	//HARDCODED VALUES FOR EACH STRCMP
-		char* id = malloc(sizeof(char)*(strlen($1)+1));
+		char* id = malloc(sizeof(char)*(strlen($5))+1);
 		id = $1;
 		if(strcmp(id, "dnum")==0){
 			display[0]=1;
