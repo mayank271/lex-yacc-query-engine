@@ -302,7 +302,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 								curr_eval=0;
 							}
 							}
-					}
+					 }
 					if(strcmp(ctemp->right->field, "eid")==0){
 						if(ctemp->right->max_val==-1){
 							if(ctemp->right->min_val!=temp->id){
@@ -433,16 +433,98 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				//add to results OR tresults
 				if(eval==1){
 					if(results==NULL){
-						
+						struct Record *r;
+						r = (struct Record*)malloc(sizeof(struct Record));
+						r->id = temp->id;
+						r->name = temp->name;
+						r->address = temp->address;
+						r->egae = temp->egae;
+						r->salary = temp->salary;
+						r->deptno = temp->deptno;
+						results=r;
 					}else{
 						if(tresults==NULL){
-
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							tresults=r;
+							results->next= tresults;
 						}else{
-							
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							tresults->next=r;
+							tresults = tresults->next;
 						}
 					}
 				}
 				temp = temp->next;
+				}
+			//print fields here
+			if(display[0]==1){
+				if(strcmp(fname, "DEPT.txt")==0){
+					printf("DNUM ");
+				}
+				else{
+					printf("EID ");
+				}
+			}
+			if(display[1]==1){
+				if(strcmp(fname, "DEPT.txt")==0){
+					printf("DNAME ");
+				}else{
+					printf("ENAME ");
+				}
+			}
+			if(display[2]==1){
+				if(strcmp(fname, "DEPT.txt")==0){
+					printf("DLOCATION ");
+				}else{
+					printf("EADDRESS ");
+				}
+			}
+			if(display[3]==1){
+				printf("EGAE ");
+			}
+			if(display[4]==1){
+				printf("SALARY ");
+			}
+			if(display[5]==1){
+				printf("DEPTNO ");
+			}
+			printf("\n");
+			//Printing results
+			while(results!=NULL){
+				if(display[0]==1){
+					printf("%d ",results->id);
+				}
+				if(display[1]==1){
+					printf("%s ", results->name);
+				}
+				if(display[2]==1){
+					printf("%s ", results->address);
+				}
+				if(display[3]==1){
+					printf("%d ",results->egae);
+				}
+				if(display[4]==1){
+					printf("%d ",results->salary);
+				}
+				if(display[5]==1){
+					printf("%d ",results->deptno);
+				}
+				printf("\n");				
+				results = results->next;
 			}
 		}
 	| S INSERT S VALUES S INTO S ID S {
