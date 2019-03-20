@@ -16,6 +16,8 @@ int display[6] = {0}; //for displaying purposes (GET)
 
 struct Record* head = NULL;
 struct Record* temp = NULL;
+struct Record* results = NULL;
+struct Record* tresults = NULL;
 
 struct Cond{
 	char* field;
@@ -238,44 +240,218 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				}while(stop==0);
 			}
 			fclose(fp);
-			while(head!=NULL){
-				printf("%d\n%s\n", head->id, head->name);
-				printf("%s\n", head->address);
-				head = head->next;
-			}
+			// while(head!=NULL){
+			// 	printf("%d\n%s\n", head->id, head->name);
+			// 	printf("%s\n", head->address);
+			// 	head = head->next;
+			// }
 			
-			//ALL CONDITION EVALUATION for ONE RECORD AT A TIME
-			// HEAD (record), CHEAD need a duplicate pointer
-			while(chead!=NULL){
-				//1.Check the type of record 0, 1, 2
-				if(chead->type == 2){
+			temp = head;
+			while(temp!=NULL){
+				int eval = 0;
+				ctemp = chead;
+				while(ctemp!=NULL){
+					int curr_eval = 0;
+					
+					if(strcmp(ctemp->right->field, "dnum")==0){
+						// CODE TO VALID THIS RECORD, IF VALID
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->id){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->id){
+									if(ctemp->right->max_val>=temp->id){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					}
+					if(strcmp(ctemp->right->field, "dname")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->name)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->name)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					}
+					if(strcmp(ctemp->right->field, "dlocation")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->address)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->address)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					}
+					if(strcmp(ctemp->right->field, "eid")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->id){
+								printf("%s\n",temp->name);
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->id){
+									if(ctemp->right->max_val>=temp->id){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					}
+					if(strcmp(ctemp->right->field, "ename")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->name)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->name)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					}
+					if(strcmp(ctemp->right->field, "egae")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->egae){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->egae){
+									if(ctemp->right->max_val>=temp->egae){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					}
+					if(strcmp(ctemp->right->field, "eaddress")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->address)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->address)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					}
+					if(strcmp(ctemp->right->field, "salary")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->salary){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->salary){
+									if(ctemp->right->max_val>=temp->salary){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					}
+					if(strcmp(ctemp->right->field, "deptno")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->deptno){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->deptno){
+									if(ctemp->right->max_val>=temp->deptno){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					}
+					//printf("%d %s \n", chead->type, chead->right->field);
+					if(ctemp->type == 2){
+						//OR type
+						if(curr_eval==1){
+							eval=1;
+							break;
+						}
+					}
+					if(ctemp->type == 1){
+						//AND type
+						if(curr_eval==0){
+							eval=0;
+							break;
+						}
+					}
+					if(ctemp->type == 0){
+						break;
+					}
+					ctemp = ctemp->left;
 				}
-				if(chead->type == 1){
+				//add to results OR tresults
+				if(eval==1){
+					if(results==NULL){
+						
+					}else{
+						if(tresults==NULL){
+
+						}else{
+							
+						}
+					}
 				}
-				if(chead->type == 0){
-				}
-				//2.Check field of condition
-				if(strcmp(chead->right->field, "dnum")==0){
-					// CODE TO VALID THIS RECORD, IF VALID
-				}
-				if(strcmp(chead->right->field, "dname")==0){
-				}
-				if(strcmp(chead->right->field, "dlocation")==0){
-				}
-				if(strcmp(chead->right->field, "eid")==0){
-				}
-				if(strcmp(chead->right->field, "ename")==0){
-				}
-				if(strcmp(chead->right->field, "egae")==0){
-				}
-				if(strcmp(chead->right->field, "eaddress")==0){
-				}
-				if(strcmp(chead->right->field, "salary")==0){
-				}
-				if(strcmp(chead->right->field, "deptno")==0){
-				}
-				//printf("%d %s \n", chead->type, chead->right->field);
-				chead = chead->left;
+				temp = temp->next;
 			}
 			}
 	| S INSERT S VALUES S INTO S ID S {
