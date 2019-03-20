@@ -6,12 +6,13 @@
 struct Record{
 	int id; //dnum, eid
 	char* name; //dname, ename
-	char* address; //dlocatoin, eaddress
+	char* address; //dlocation, eaddress
 	int egae;
 	int salary;
 	int deptno;
 	struct Record *next;
 };
+int display[6] = {0}; //for displaying purposes (GET)
 
 struct Record* head = NULL;
 struct Record* temp = NULL;
@@ -44,140 +45,228 @@ struct Conditions* ctemp = NULL;
 %%
 stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 	//Get filename from the query
-	char* fname=malloc(sizeof(char)*(strlen($8)+4)); strcpy(fname, $8); strcat(fname, ".txt"); //printf("%s", fname);
-	//Initialize data
-	FILE *fp;
-	fp = fopen(fname, "r");
-	// INSERT FILE CHECK HERE [EMP, DEPT] TO BE DEALT SEPARATELY
-	int c, stop=0;
-	do{
-		char buffer[2000];
-		int buffer_i = 0;
-		int buffer_c1 = 0, buffer_c2 = 0, buffer_c3 = 0; //to keep track of values
-		do{
-		c = fgetc(fp);
-		if(feof(fp)){
-			stop = 1;
-			break;
-		}
-		buffer[buffer_i] = (char) c;
-		if(buffer[buffer_i] == ','){
-			if(buffer_c2 == 0){
-				if(buffer_c1 > 0){
-					buffer_c2 = buffer_i;
-				}
-				else{
-					buffer_c1 = buffer_i;
-				}
-			}
-		}
-//		printf("%c", c);
-		buffer_i++;
-		}while(c!=(int)'\n');
-		buffer_c3 = buffer_i-1;
-		if(buffer_c1 == 0) break;
-//		printf("%d %d %d\n", buffer_c1, buffer_c2, buffer_c3);
-		struct Record *r;
-		r = (struct Record*)malloc(sizeof(struct Record));
-		
-		int int_val=0;
-		for(int i=5; i<buffer_c1; i++){
-			int_val *= 10;
-			int_val += buffer[i] - '0';
-		}
-		r->id = int_val;
-//		printf("%d\n", r->id);
-		
-		char* buff_name=malloc(sizeof(char)*(200));
-//		char buff_name[200];
-		int_val = 0;
-		for(int i=buffer_c1+8; i<buffer_c2; i++, int_val++){
-			buff_name[int_val] = buffer[i];
-		}
-		buff_name[int_val] = '\0';
-		r->name = buff_name;
+			char* fname=malloc(sizeof(char)*(strlen($8)+4)); strcpy(fname, $8); strcat(fname, ".txt"); //printf("%s", fname);
+			//Initialize data
+			FILE *fp;
+			fp = fopen(fname, "r");
+			if(strcmp(fname, "DEPT.txt")==0){// INSERT FILE CHECK HERE [EMP, DEPT] TO BE DEALT SEPARATELY
+				int c, stop=0;
+				do{
+					char buffer[2000];
+					int buffer_i = 0;
+					int buffer_c1 = 0, buffer_c2 = 0, buffer_c3 = 0; //to keep track of values
+					do{
+					c = fgetc(fp);
+					if(feof(fp)){
+						stop = 1;
+						break;
+					}
+					buffer[buffer_i] = (char) c;
+					if(buffer[buffer_i] == ','){
+						if(buffer_c2 == 0){
+							if(buffer_c1 > 0){
+								buffer_c2 = buffer_i;
+							}
+							else{
+								buffer_c1 = buffer_i;
+							}
+						}
+					}
+				//		printf("%c", c);
+					buffer_i++;
+					}while(c!=(int)'\n');
+					buffer_c3 = buffer_i-1;
+					if(buffer_c1 == 0) break;
+				//		printf("%d %d %d\n", buffer_c1, buffer_c2, buffer_c3);
+					struct Record *r;
+					r = (struct Record*)malloc(sizeof(struct Record));
+					
+					int int_val=0;
+					for(int i=5; i<buffer_c1; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->id = int_val;
+				//		printf("%d\n", r->id);
+					
+					char* buff_name=malloc(sizeof(char)*(200));
+				//		char buff_name[200];
+					int_val = 0;
+					for(int i=buffer_c1+8; i<buffer_c2; i++, int_val++){
+						buff_name[int_val] = buffer[i];
+					}
+					buff_name[int_val] = '\0';
+					r->name = buff_name;
 
-		char* buff_add=malloc(sizeof(char)*(1000));
-//		char buff_add[2000];
-		int_val = 0;
-		for(int i=buffer_c2+12; i< buffer_c3; i++, int_val++){
-			buff_add[int_val] = buffer[i];
-		}
-		buff_add[int_val] = '\0';
-		r->address = buff_add;
-//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
+					char* buff_add=malloc(sizeof(char)*(1000));
+				//		char buff_add[2000];
+					int_val = 0;
+					for(int i=buffer_c2+12; i< buffer_c3; i++, int_val++){
+						buff_add[int_val] = buffer[i];
+					}
+					buff_add[int_val] = '\0';
+					r->address = buff_add;
+				//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
 
-		if(head == NULL){
-			head = r;
-			head->next = NULL;
-		}
-		else{
-			if(temp == NULL){
-				temp = r;				
-				head->next = temp;
-				temp->next = NULL;
+					if(head == NULL){
+						head = r;
+						head->next = NULL;
+					}
+					else{
+						if(temp == NULL){
+							temp = r;				
+							head->next = temp;
+							temp->next = NULL;
+						}
+						else{
+							r->next = NULL;
+							temp->next = r;	
+							temp = temp->next;
+						}
+					}
+				}while(stop==0);
 			}
 			else{
-				r->next = NULL;
-				temp->next = r;	
-				temp = temp->next;
-			}
-		}
-	}while(stop==0);
-	fclose(fp);
-	// FILE CHECK LOOP ENDS HERE
+				//EMPLOYEE FILE CASE
+				int c, stop=0;
+				do{
+					char buffer[2000];
+					int buffer_i = 0;
+					int buffer_c1 = 0, buffer_c2 = 0, buffer_c3 = 0, buffer_c4 = 0, buffer_c5 = 0, buffer_c6 = 0; //to keep track of values
+					do{
+					c = fgetc(fp);
+					if(feof(fp)){
+						stop = 1;
+						break;
+					}
+					buffer[buffer_i] = (char) c;
+					if(buffer[buffer_i] == ','){
+						if(buffer_c5 == 0){
+							if(buffer_c4 > 0){
+									buffer_c5 = buffer_i;
+							}
+							else{
+								if(buffer_c3 > 0){
+									buffer_c4 = buffer_i;
+								}
+								else{
+									if(buffer_c2 > 0){
+										buffer_c3 = buffer_i;
+									}
+									else{
+										if(buffer_c1 > 0){
+											buffer_c2 = buffer_i;
+										}
+										else{
+											buffer_c1 = buffer_i;
+										}
+									}
+								}
+							}
+						}
+					}
+					buffer_i++;
+					}while(c!=(int)'\n');
+					buffer_c6 = buffer_i-1;
+					if(buffer_c1 == 0) break;
+					struct Record *r;
+					r = (struct Record*)malloc(sizeof(struct Record));
+					int int_val=0;
+					for(int i=4; i<buffer_c1; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->id = int_val;
+				//		printf("%d\n", r->id);
+					
+					char* buff_name=malloc(sizeof(char)*(200));
+				//		char buff_name[200];
+					int_val = 0;
+					for(int i=buffer_c1+8; i<buffer_c2; i++, int_val++){
+						buff_name[int_val] = buffer[i];
+					}
+					buff_name[int_val] = '\0';
+					r->name = buff_name;
 
-//	while(head!=NULL){
-//		printf("sss\n");
-//		printf("%d %s ", head->id, head->name);
-//		printf("%s\n", head->address);
-//		head = head->next;
-//	}
-	
-	//ALL CONDITION EVALUATION for ONE RECORD AT A TIME
-	// HEAD (record) needs to be duplicated
-	while(chead!=NULL){
-		//1.Check the type of record 0, 1, 2
-		if(chead->type == 2){
+					char* buff_add=malloc(sizeof(char)*(1000));
+				//		char buff_add[2000];
+					int_val = 0;
+					for(int i=buffer_c2+12; i< buffer_c3; i++, int_val++){
+						buff_add[int_val] = buffer[i];
+					}
+					buff_add[int_val] = '\0';
+					r->address = buff_add;
+				//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
+
+					if(head == NULL){
+						head = r;
+						head->next = NULL;
+					}
+					else{
+						if(temp == NULL){
+							temp = r;				
+							head->next = temp;
+							temp->next = NULL;
+						}
+						else{
+							r->next = NULL;
+							temp->next = r;	
+							temp = temp->next;
+						}
+					}
+				}while(stop==0);
+			}
+			fclose(fp);
+			while(head!=NULL){
+				printf("sss\n");
+				printf("%d %s ", head->id, head->name);
+				head = head->next;
+			}
+			
+			//ALL CONDITION EVALUATION for ONE RECORD AT A TIME
+			// HEAD (record), CHEAD need a duplicate pointer
+			while(chead!=NULL){
+				//1.Check the type of record 0, 1, 2
+				if(chead->type == 2){
+				}
+				if(chead->type == 1){
+				}
+				if(chead->type == 0){
+				}
+				//2.Check field of condition
+				if(strcmp(chead->right->field, "dnum")==0){
+					// CODE TO VALID THIS RECORD, IF VALID
+				}
+				if(strcmp(chead->right->field, "dname")==0){
+				}
+				if(strcmp(chead->right->field, "dlocation")==0){
+				}
+				if(strcmp(chead->right->field, "eid")==0){
+				}
+				if(strcmp(chead->right->field, "ename")==0){
+				}
+				if(strcmp(chead->right->field, "egae")==0){
+				}
+				if(strcmp(chead->right->field, "eaddress")==0){
+				}
+				if(strcmp(chead->right->field, "salary")==0){
+				}
+				if(strcmp(chead->right->field, "deptno")==0){
+				}
+				//printf("%d %s \n", chead->type, chead->right->field);
+				chead = chead->left;
+			}
+			}
+	| S INSERT S VALUES S INTO S ID S {
+		// ###### WORKS FINE BOTH INCLUSIVE ######
+		//Get filename from the query
+		char* fname=malloc(sizeof(char)*(strlen($8)+4)); strcpy(fname, $8); strcat(fname, ".txt");
+		FILE *fp;
+		fp = fopen(fname, "a");
+		fprintf(fp, "%s\n",$4);
+		printf("Record succesfully inserted...\n");
+		fclose(fp);
 		}
-		if(chead->type == 1){
-		}
-		if(chead->type == 0){
-		}
-		//2.Check field of condition
-		if(strcmp(chead->right->field, "dnum")==0){
-			// CODE TO VALID THIS RECORD, IF VALID
-		}
-		if(strcmp(chead->right->field, "dname")==0){
-		}
-		if(strcmp(chead->right->field, "dlocation")==0){
-		}
-		if(strcmp(chead->right->field, "eid")==0){
-		}
-		if(strcmp(chead->right->field, "ename")==0){
-		}
-		if(strcmp(chead->right->field, "egae")==0){
-		}
-		if(strcmp(chead->right->field, "eaddress")==0){
-		}
-		if(strcmp(chead->right->field, "salary")==0){
-		}
-		if(strcmp(chead->right->field, "deptno")==0){
-		}
-		//printf("%d %s \n", chead->type, chead->right->field);
-		chead = chead->left;
-	}
-	}
-  | S INSERT S VALUES S INTO S ID S {
-	// ###### WORKS FINE BOTH INCLUSIVE ######
-	//Get filename from the query
-	char* fname=malloc(sizeof(char)*(strlen($8)+4)); strcpy(fname, $8); strcat(fname, ".txt");
-	FILE *fp;
-	fp = fopen(fname, "a");
-	fprintf(fp, "%s\n",$4);
-	printf("Record succesfully inserted...\n");
-	fclose(fp);
-	}
   | S UPDATE S ID S SET S ID S TO S NEWVAL S WHERE S CONDITIONS S {/**/}
   | S DELETE S FROM S ID S WHERE S CONDITIONS S {/**/}
   ;
@@ -211,8 +300,8 @@ VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
 	strcat(s, dloc);
 	$$=s;
     }
-  | NUM S COMMA S VALUE S COMMA S NUM S COMMA S VALUE S COMMA S NUM S COMMA S NUM {
-    // eid, ename, egae, eaddress, salary, deptno
+  |NUM S COMMA S VALUE S COMMA S NUM S COMMA S NUM S COMMA S NUM S COMMA S VALUE {
+    // eid, ename, egae, salary, deptno, eaddress
 	int eid = $1;
 	char s1[12];
 	sprintf(s1, "%d", eid);
@@ -228,20 +317,20 @@ VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
 	char s2[12];
 	sprintf(s2, "%d", egae);
 	
-	char* eadd_t =malloc(sizeof(char)*(strlen($13)+1));
-	eadd_t = $13;
-	char* eadd=malloc(sizeof(char)*(strlen($13)-1));	
-	for(int i=0;i<strlen($13)-2;i++){
-		eadd[i] = eadd_t[i+1];
-	}
-
-	int salary = $17;
+	int salary = $13;
 	char s3[12];
 	sprintf(s3, "%d", salary);
 
-	int deptno = $21;
+	int deptno = $17;
 	char s4[12];
 	sprintf(s4, "%d", deptno);
+	
+	char* eadd_t =malloc(sizeof(char)*(strlen($21)+1));
+	eadd_t = $21;
+	char* eadd=malloc(sizeof(char)*(strlen($21)-1));	
+	for(int i=0;i<strlen($21)-2;i++){
+		eadd[i] = eadd_t[i+1];
+	}
 
 	char* s=malloc(sizeof(char)*(4+strlen(s1)+2+6+strlen(ename)+2+5+strlen(s2)+2+9+strlen(eadd)+2+7+strlen(s3)+2+7+strlen(s4)+1));
 	strcpy(s, "eid ");
@@ -253,22 +342,80 @@ VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
 	strcat(s, "egae ");
 	strcat(s, s2);
 	strcat(s, ", ");
-	strcat(s, "eaddress ");
-	strcat(s, eadd);
-	strcat(s, ", ");
 	strcat(s, "salary ");
 	strcat(s, s3);
 	strcat(s, ", ");
 	strcat(s, "deptno ");
 	strcat(s, s4);
+	strcat(s, ", ");
+	strcat(s, "eaddress ");
+	strcat(s, eadd);
 	$$=s;
     }
 FIELDS: FIELDS S COMMA S ID {
-	//HARDCODE VALUES FOR EACH STRCMP
+	//HARDCODED VALUES FOR EACH STRCMP
+	char* id = malloc(sizeof(char)*(strlen($5))+1);
+	id = $5;
+	if(strcmp(id, "dnum")==0){
+		display[0]=1;
+	}
+	if(strcmp(id, "eid")==0){
+		display[0]=1;
+	}
+	if(strcmp(id, "dname")==0){
+		display[1]=1;
+	}
+	if(strcmp(id, "ename")==0){
+		display[1]=1;
+	}
+	if(strcmp(id, "dlocation")==0){
+		display[2]=1;
+	}
+	if(strcmp(id, "eaddress")==0){
+		display[2]=1;
+	}
+	if(strcmp(id, "egae")==0){
+		display[3]=1;
+	}
+	if(strcmp(id, "salary")==0){
+		display[4]=1;
+	}
+	if(strcmp(id, "deptno")==0){
+		display[5]=1;
+	}
 	}
   | ID {
-	//HARDCODE VALUES FOR EACH STRCMP
-	}
+	//HARDCODED VALUES FOR EACH STRCMP
+		char* id = malloc(sizeof(char)*(strlen($5))+1);
+		id = $1;
+		if(strcmp(id, "dnum")==0){
+			display[0]=1;
+		}
+		if(strcmp(id, "eid")==0){
+			display[0]=1;
+		}
+		if(strcmp(id, "dname")==0){
+			display[1]=1;
+		}
+		if(strcmp(id, "ename")==0){
+			display[1]=1;
+		}
+		if(strcmp(id, "dlocation")==0){
+			display[2]=1;
+		}
+		if(strcmp(id, "eaddress")==0){
+			display[2]=1;
+		}
+		if(strcmp(id, "egae")==0){
+			display[3]=1;
+		}
+		if(strcmp(id, "salary")==0){
+			display[4]=1;
+		}
+		if(strcmp(id, "deptno")==0){
+			display[5]=1;
+		}
+		}
   ;
 NEWVAL: ID {/**/}
   | NUM {/**/}
@@ -424,7 +571,6 @@ S: SPACE
 %%
 void main()
 {
-
 printf("enter statement : \n");
 yyparse();
 printf("valid statement");
