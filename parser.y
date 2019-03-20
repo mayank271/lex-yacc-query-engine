@@ -304,7 +304,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 								curr_eval=0;
 							}
 							}
-						}
 					}
 					if(strcmp(ctemp->right->field, "eid")==0){
 						if(ctemp->right->max_val==-1){
@@ -326,7 +325,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 								}
 							}
 						}
-					}
 					if(strcmp(ctemp->right->field, "ename")==0){
 						if(ctemp->right->max_val==1){
 							if(strcmp(ctemp->right->ex_val, temp->name)==1){
@@ -342,7 +340,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 							}
 							}
 						}
-					}
 					if(strcmp(ctemp->right->field, "egae")==0){
 						if(ctemp->right->max_val==-1){
 							if(ctemp->right->min_val!=temp->egae){
@@ -362,7 +359,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 								}
 							}
 						}
-					}
 					if(strcmp(ctemp->right->field, "eaddress")==0){
 						if(ctemp->right->max_val==1){
 							if(strcmp(ctemp->right->ex_val, temp->address)==1){
@@ -378,7 +374,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 							}
 							}
 						}
-					}
 					if(strcmp(ctemp->right->field, "salary")==0){
 						if(ctemp->right->max_val==-1){
 							if(ctemp->right->min_val!=temp->salary){
@@ -398,7 +393,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 								}
 							}
 						}
-					}
 					if(strcmp(ctemp->right->field, "deptno")==0){
 						if(ctemp->right->max_val==-1){
 							if(ctemp->right->min_val!=temp->deptno){
@@ -418,7 +412,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 								}
 							}
 						}
-					}
 					//printf("%d %s \n", chead->type, chead->right->field);
 					if(ctemp->type == 2){
 						//OR type
