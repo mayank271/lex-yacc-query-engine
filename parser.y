@@ -273,7 +273,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 								}
 							}
 						}
-					}
 					if(strcmp(ctemp->right->field, "dname")==0){
 						if(ctemp->right->max_val==1){
 							if(strcmp(ctemp->right->ex_val, temp->name)==1){
@@ -289,7 +288,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 							}
 							}
 						}
-					}
 					if(strcmp(ctemp->right->field, "dlocation")==0){
 						if(ctemp->right->max_val==1){
 							if(strcmp(ctemp->right->ex_val, temp->address)==1){
@@ -446,7 +444,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				}
 				temp = temp->next;
 			}
-			}
+		}
 	| S INSERT S VALUES S INTO S ID S {
 		// ###### WORKS FINE BOTH INCLUSIVE ######
 		//Get filename from the query
