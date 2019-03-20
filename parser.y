@@ -386,7 +386,7 @@ FIELDS: FIELDS S COMMA S ID {
 	}
   | ID {
 	//HARDCODED VALUES FOR EACH STRCMP
-		char* id = malloc(sizeof(char)*(strlen($5))+1);
+		char* id = malloc(sizeof(char)*(strlen($1))+1);
 		id = $1;
 		if(strcmp(id, "dnum")==0){
 			display[0]=1;
