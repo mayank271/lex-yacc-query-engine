@@ -14,11 +14,12 @@ struct Record{
 };
 
 struct Record* head = NULL;
+struct Record* temp = NULL;
 
 struct Cond{
 	char* field;
-	int min_val=-2000000; //for int fields
-	int max_val=2000000; //for int fields
+	int min_val; //for int fields
+	int max_val; //for int fields
 	char* ex_val; // for string fields
 };
 
@@ -29,7 +30,7 @@ struct Conditions{
 };
 
 struct Conditions* chead = NULL;
-
+struct Conditions* ctemp = NULL;
 %}
 %union {
 	int ival;
@@ -48,7 +49,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 	FILE *fp;
 	fp = fopen(fname, "r");
 	int c, stop=0;
-	struct Record* temp = NULL;
 	do{
 		char buffer[2000];
 		int buffer_i = 0;
@@ -181,9 +181,63 @@ FIELDS: FIELDS S COMMA S ID {/**/}
 NEWVAL: ID {/**/}
   | NUM {/**/}
   ;
-CONDITIONS: CONDITIONS S AND S CONDITION
-  | CONDITIONS S OR S CONDITION
-  | CONDITION
+CONDITIONS: CONDITIONS S AND S CONDITION{
+	struct Conditions *cns;
+	cns = (struct Conditions*)malloc(sizeof(struct Conditions));
+	cns->type = 1;
+	cns->right = $5;
+	if (chead == NULL) {
+		chead = cns;
+	}
+	else{
+		if(ctemp == NULL){
+			ctemp = cns;
+			chead->left = ctemp;
+		}
+		else{
+			ctemp->left = cns;
+			ctemp = ctemp->left;
+		}
+	}
+	}
+  | CONDITIONS S OR S CONDITION {
+	struct Conditions *cns;
+	cns = (struct Conditions*)malloc(sizeof(struct Conditions));
+	cns->type = 2;
+	cns->right = $5;
+	if (chead == NULL) {
+		chead = cns;
+	}
+	else{
+		if(ctemp == NULL){
+			ctemp = cns;
+			chead->left = ctemp;
+		}
+		else{
+			ctemp->left = cns;
+			ctemp = ctemp->left;
+		}
+	}
+	}
+  | CONDITION {
+	struct Conditions *cns;
+	cns = (struct Conditions*)malloc(sizeof(struct Conditions));
+	cns->type = 0;
+	cns->right = $1;
+	if (chead == NULL) {
+		chead = cns;
+	}
+	else{
+		if(ctemp == NULL){
+			ctemp = cns;
+			chead->left = ctemp;
+		}
+		else{
+			ctemp->left = cns;
+			ctemp = ctemp->left;
+		}
+	}
+	}
   ;
 CONDITION: ID S EQUAL S ID {
 		
@@ -192,7 +246,14 @@ CONDITION: ID S EQUAL S ID {
 		
 	}
   | ID S EQUAL S NUM {
-		
+	struct Cond *c;
+	c = (struct Cond*)malloc(sizeof(struct Cond));
+	char* name=malloc(sizeof(char)*(strlen($1)+1));
+	name = $1;
+	c->field = name;
+	c->min_val = $5;
+	c->max_val = $5;
+	$$=c;
 	}
   | ID S NE S NUM {
 		
@@ -216,7 +277,11 @@ S: SPACE
 %%
 void main()
 {
+
 printf("enter statement : \n");
+
+
+
 yyparse();
 printf("valid statement");
 exit(0);
