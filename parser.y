@@ -14,14 +14,32 @@ struct Record{
 };
 
 struct Record* head = NULL;
+
+struct Cond{
+	char* field;
+	int min_val=-2000000; //for int fields
+	int max_val=2000000; //for int fields
+	char* ex_val; // for string fields
+};
+
+struct Conditions{
+	int type; //0->END, 1->AND, 2->OR
+	struct Conditions *left;
+	struct Cond *right;	
+};
+
+struct Conditions* chead = NULL;
+
 %}
 %union {
 	int ival;
 	char *sval;
+	struct Cond *cval;
 }
 %token <sval> AND COMMA DELETE FROM GET ID INSERT INTO OR SET SPACE TO UPDATE WHERE EQUAL NE GT GE LT LE VALUE
 %token <ival> NUM
 %type <sval> VALUES
+%type <cval> CONDITION
 %%
 stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 	//Get filename from the query
