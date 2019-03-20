@@ -188,14 +188,35 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 					buff_name[int_val] = '\0';
 					r->name = buff_name;
 
+					int_val=0;
+					for(int i=buffer_c2+7; i<buffer_c3; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->egae = int_val;
+
+					int_val=0;
+					for(int i=buffer_c3+9; i<buffer_c4; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->salary = int_val;
+
+					int_val=0;
+					for(int i=buffer_c4+9; i<buffer_c5; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->deptno = int_val;
 					char* buff_add=malloc(sizeof(char)*(1000));
 				//		char buff_add[2000];
 					int_val = 0;
-					for(int i=buffer_c2+12; i< buffer_c3; i++, int_val++){
+					for(int i=buffer_c5+11; i< buffer_c6; i++, int_val++){
 						buff_add[int_val] = buffer[i];
 					}
 					buff_add[int_val] = '\0';
 					r->address = buff_add;
+				//		printf("%d %s %d %d %d\n", r->id, r->name, r->egae, r->salary, r->deptno);
 				//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
 
 					if(head == NULL){
@@ -218,8 +239,8 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 			}
 			fclose(fp);
 			while(head!=NULL){
-				printf("%d %s ", head->id, head->name);
-				printf("%s \n", head->address);
+				printf("%d\n%s\n", head->id, head->name);
+				printf("%s\n", head->address);
 				head = head->next;
 			}
 			
