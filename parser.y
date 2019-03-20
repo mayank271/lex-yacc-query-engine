@@ -306,7 +306,6 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 					if(strcmp(ctemp->right->field, "eid")==0){
 						if(ctemp->right->max_val==-1){
 							if(ctemp->right->min_val!=temp->id){
-								printf("%s\n",temp->name);
 								curr_eval=1;
 							}else{
 								curr_eval=0;
@@ -442,6 +441,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 						r->salary = temp->salary;
 						r->deptno = temp->deptno;
 						results=r;
+						printf("%d %s %s %d %d %d \n",results->id, results->name, results->address, results->egae, results->salary, results->deptno);
 					}else{
 						if(tresults==NULL){
 							struct Record *r;
