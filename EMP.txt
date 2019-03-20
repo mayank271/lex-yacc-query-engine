@@ -1,4 +1,4 @@
-eid 1, ename Employee One, egae 202, eaddress House No. 1, Street One, OneCity, India, salary 20000, deptno 1
-eid 2, ename Employee Two, egae 402, eaddress House No. 2, Street Three, TwoCity, India, salary 43000, deptno 2
-eid 3, ename Employee Three, egae 102, eaddress House No. 2, Street Two, ThreeCity, India, salary 34000, deptno 1
-eid 4, ename Employee Four, egae 302, eaddress House No. 2, Street Four, TwoCity, India, salary 25000, deptno 3
+eid 1, ename Employee One, egae 202, salary 20000, deptno 1, eaddress House No. 1, Street One, OneCity, India
+eid 2, ename Employee Two, egae 402, salary 43000, deptno 2, eaddress House No. 2, Street Three, TwoCity, India
+eid 3, ename Employee Three, egae 102, salary 34000, deptno 1, eaddress House No. 2, Street Two, ThreeCity, India
+eid 4, ename Employee Four, egae 302, salary 25000, deptno 3, eaddress House No. 2, Street Four, TwoCity, India
