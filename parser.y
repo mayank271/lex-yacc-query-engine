@@ -557,8 +557,1475 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 		printf("Record succesfully inserted...\n");
 		fclose(fp);
 		}
-  | S UPDATE S ID S SET S ID S TO S NEWVAL S WHERE S CONDITIONS S {/**/}
-  | S DELETE S FROM S ID S WHERE S CONDITIONS S {/**/}
+  | S UPDATE S ID S SET S ID S TO S VALUE S WHERE S CONDITIONS S {
+			char* fname=malloc(sizeof(char)*(strlen($4)+4)); strcpy(fname, $4); strcat(fname, ".txt"); //printf("%s", fname);
+			char* id = malloc(sizeof(char)*(strlen($8)+1));
+			id = $8;
+			char* val_t=malloc(sizeof(char)*(strlen($5)+1));
+			val_t = $12;
+			char* val=malloc(sizeof(char)*(strlen($5)-1));	
+			for(int i=0;i<strlen($5)-2;i++){
+					val[i] = val_t[i+1];
+				}
+			FILE *fp;
+			fp = fopen(fname, "r");
+			if(strcmp(fname, "DEPT.txt")==0){// INSERT FILE CHECK HERE [EMP, DEPT] TO BE DEALT SEPARATELY
+				int c, stop=0;
+				do{
+					char buffer[2000];
+					int buffer_i = 0;
+					int buffer_c1 = 0, buffer_c2 = 0, buffer_c3 = 0; //to keep track of values
+					do{
+					c = fgetc(fp);
+					if(feof(fp)){
+						stop = 1;
+						break;
+					}
+					buffer[buffer_i] = (char) c;
+					if(buffer[buffer_i] == ','){
+						if(buffer_c2 == 0){
+							if(buffer_c1 > 0){
+								buffer_c2 = buffer_i;
+							}
+							else{
+								buffer_c1 = buffer_i;
+							}
+						}
+					}
+				//		printf("%c", c);
+					buffer_i++;
+					}while(c!=(int)'\n');
+					buffer_c3 = buffer_i-1;
+					if(buffer_c1 == 0) break;
+				//		printf("%d %d %d\n", buffer_c1, buffer_c2, buffer_c3);
+					struct Record *r;
+					r = (struct Record*)malloc(sizeof(struct Record));
+					
+					int int_val=0;
+					for(int i=5; i<buffer_c1; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->id = int_val;
+				//		printf("%d\n", r->id);
+					
+					char* buff_name=malloc(sizeof(char)*(200));
+				//		char buff_name[200];
+					int_val = 0;
+					for(int i=buffer_c1+8; i<buffer_c2; i++, int_val++){
+						buff_name[int_val] = buffer[i];
+					}
+					buff_name[int_val] = '\0';
+					r->name = buff_name;
+					char* buff_add=malloc(sizeof(char)*(1000));
+				//		char buff_add[2000];
+					int_val = 0;
+					for(int i=buffer_c2+12; i< buffer_c3; i++, int_val++){
+						buff_add[int_val] = buffer[i];
+					}
+					buff_add[int_val] = '\0';
+					r->address = buff_add;
+				//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
+					if(head == NULL){
+						head = r;
+						head->next = NULL;
+					}
+					else{
+						if(temp == NULL){
+							temp = r;				
+							head->next = temp;
+							temp->next = NULL;
+						}
+						else{
+							r->next = NULL;
+							temp->next = r;	
+							temp = temp->next;
+						}
+					}
+				}while(stop==0);
+			}
+			else{
+				//EMPLOYEE FILE CASE
+				int c, stop=0;
+				do{
+					char buffer[2000];
+					int buffer_i = 0;
+					int buffer_c1 = 0, buffer_c2 = 0, buffer_c3 = 0, buffer_c4 = 0, buffer_c5 = 0, buffer_c6 = 0; //to keep track of values
+					do{
+					c = fgetc(fp);
+					if(feof(fp)){
+						stop = 1;
+						break;
+					}
+					buffer[buffer_i] = (char) c;
+					if(buffer[buffer_i] == ','){
+						if(buffer_c5 == 0){
+							if(buffer_c4 > 0){
+									buffer_c5 = buffer_i;
+							}
+							else{
+								if(buffer_c3 > 0){
+									buffer_c4 = buffer_i;
+								}
+								else{
+									if(buffer_c2 > 0){
+										buffer_c3 = buffer_i;
+									}
+									else{
+										if(buffer_c1 > 0){
+											buffer_c2 = buffer_i;
+										}
+										else{
+											buffer_c1 = buffer_i;
+										}
+									}
+								}
+							}
+						}
+					}
+					buffer_i++;
+					}while(c!=(int)'\n');
+					buffer_c6 = buffer_i-1;
+					if(buffer_c1 == 0) break;
+					struct Record *r;
+					r = (struct Record*)malloc(sizeof(struct Record));
+					int int_val=0;
+					for(int i=4; i<buffer_c1; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->id = int_val;
+				//		printf("%d\n", r->id);
+					
+					char* buff_name=malloc(sizeof(char)*(200));
+				//		char buff_name[200];
+					int_val = 0;
+					for(int i=buffer_c1+8; i<buffer_c2; i++, int_val++){
+						buff_name[int_val] = buffer[i];
+					}
+					buff_name[int_val] = '\0';
+					r->name = buff_name;
+					int_val=0;
+					for(int i=buffer_c2+7; i<buffer_c3; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->egae = int_val;
+					int_val=0;
+					for(int i=buffer_c3+9; i<buffer_c4; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->salary = int_val;
+					int_val=0;
+					for(int i=buffer_c4+9; i<buffer_c5; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->deptno = int_val;
+					char* buff_add=malloc(sizeof(char)*(1000));
+				//		char buff_add[2000];
+					int_val = 0;
+					for(int i=buffer_c5+11; i< buffer_c6; i++, int_val++){
+						buff_add[int_val] = buffer[i];
+					}
+					buff_add[int_val] = '\0';
+					r->address = buff_add;
+				//		printf("%d %s %d %d %d\n", r->id, r->name, r->egae, r->salary, r->deptno);
+				//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
+					if(head == NULL){
+						head = r;
+						head->next = NULL;
+					}
+					else{
+						if(temp == NULL){
+							temp = r;				
+							head->next = temp;
+							temp->next = NULL;
+						}
+						else{
+							r->next = NULL;
+							temp->next = r;	
+							temp = temp->next;
+						}
+					}
+				}while(stop==0);
+			}
+			fclose(fp);
+			temp = head;
+			while(temp!=NULL){
+				int eval = 0;
+				ctemp = chead;
+				while(ctemp!=NULL){
+					int curr_eval = 0;
+					if(strcmp(ctemp->right->field, "dnum")==0){
+						// CODE TO VALID THIS RECORD, IF VALID
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->id){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->id){
+									if(ctemp->right->max_val>=temp->id){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "dname")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->name)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->name)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					if(strcmp(ctemp->right->field, "dlocation")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->address)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->address)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+					 }
+					if(strcmp(ctemp->right->field, "eid")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->id){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->id){
+									if(ctemp->right->max_val>=temp->id){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "ename")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->name)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->name)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					if(strcmp(ctemp->right->field, "egae")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->egae){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->egae){
+									if(ctemp->right->max_val>=temp->egae){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "eaddress")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->address)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->address)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					if(strcmp(ctemp->right->field, "salary")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->salary){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->salary){
+									if(ctemp->right->max_val>=temp->salary){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "deptno")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->deptno){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->deptno){
+									if(ctemp->right->max_val>=temp->deptno){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					//printf("%d %s \n", chead->type, chead->right->field);
+					if(ctemp->type == 2){
+						//OR type
+						if(curr_eval==1){
+							eval=1;
+							break;
+						}
+					}
+					if(ctemp->type == 1){
+						//AND type
+						if(curr_eval==0){
+							eval=0;
+							break;
+						}
+					}
+					if(ctemp->type == 0){
+						eval=curr_eval;
+						break;
+					}
+					ctemp = ctemp->left;
+				}
+				//add to results OR tresults
+				if(eval==1){
+					if(results==NULL){
+						struct Record *r;
+						r = (struct Record*)malloc(sizeof(struct Record));
+						r->id = temp->id;
+						r->name = temp->name;
+						r->address = temp->address;
+						r->egae = temp->egae;
+						r->salary = temp->salary;
+						r->deptno = temp->deptno;
+						r->next = NULL;
+						if(strcmp(id, "dname")==0){
+							r->name = val;
+						}
+						if(strcmp(id, "ename")==0){
+							r->name = val;
+						}
+						if(strcmp(id, "dlocation")==0){
+							r->address = val;
+						}
+						if(strcmp(id, "eaddress")==0){
+							r->address = val;
+						}						
+						results=r;
+					}else{
+						if(tresults==NULL){
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							if(strcmp(id, "dname")==0){
+								r->name = val;
+							}
+							if(strcmp(id, "ename")==0){
+								r->name = val;
+							}
+							if(strcmp(id, "dlocation")==0){
+								r->address = val;
+							}
+							if(strcmp(id, "eaddress")==0){
+								r->address = val;
+							}
+							tresults=r;
+							results->next= tresults;
+						}else{
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							if(strcmp(id, "dname")==0){
+								r->name = val;
+							}
+							if(strcmp(id, "ename")==0){
+								r->name = val;
+							}
+							if(strcmp(id, "dlocation")==0){
+								r->address = val;
+							}
+							if(strcmp(id, "eaddress")==0){
+								r->address = val;
+							}
+							tresults->next=r;
+							tresults = tresults->next;
+						}
+					}
+				}
+				else{
+					if(results==NULL){
+						struct Record *r;
+						r = (struct Record*)malloc(sizeof(struct Record));
+						r->id = temp->id;
+						r->name = temp->name;
+						r->address = temp->address;
+						r->egae = temp->egae;
+						r->salary = temp->salary;
+						r->deptno = temp->deptno;
+						r->next = NULL;
+						results=r;
+					}else{
+						if(tresults==NULL){
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							tresults=r;
+							results->next= tresults;
+						}else{
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							tresults->next=r;
+							tresults = tresults->next;
+						}
+					}
+				}
+				temp = temp->next;
+				}
+			// All updated records in results
+			fp = fopen(fname, "w");
+			while(results!=NULL){
+				if(strcmp(fname, "DEPT.txt")==0){
+						fprintf(fp, "dnum %d, ",results->id);
+						fprintf(fp, "dname %s, ", results->name);
+						fprintf(fp, "dlocation %s\n", results->address);
+				}
+				else{
+						fprintf(fp, "eid %d, ",results->id);
+						fprintf(fp, "ename %s, ",results->name);
+						fprintf(fp, "egae %d, ", results->egae);
+						fprintf(fp, "salary %d, ",results->salary);
+						fprintf(fp, "deptno %d, ", results->deptno);
+						fprintf(fp, "eaddress %s\n",results->address);
+				}
+			}
+			fclose(fp);
+		}
+	| S UPDATE S ID S SET S ID S TO S NUM S WHERE S CONDITIONS S {
+			char* fname=malloc(sizeof(char)*(strlen($4)+4)); strcpy(fname, $4); strcat(fname, ".txt"); //printf("%s", fname);
+			char* id = malloc(sizeof(char)*(strlen($8)+1));
+			id = $8;
+			val = $12;
+			FILE *fp;
+			fp = fopen(fname, "r");
+			if(strcmp(fname, "DEPT.txt")==0){// INSERT FILE CHECK HERE [EMP, DEPT] TO BE DEALT SEPARATELY
+				int c, stop=0;
+				do{
+					char buffer[2000];
+					int buffer_i = 0;
+					int buffer_c1 = 0, buffer_c2 = 0, buffer_c3 = 0; //to keep track of values
+					do{
+					c = fgetc(fp);
+					if(feof(fp)){
+						stop = 1;
+						break;
+					}
+					buffer[buffer_i] = (char) c;
+					if(buffer[buffer_i] == ','){
+						if(buffer_c2 == 0){
+							if(buffer_c1 > 0){
+								buffer_c2 = buffer_i;
+							}
+							else{
+								buffer_c1 = buffer_i;
+							}
+						}
+					}
+				//		printf("%c", c);
+					buffer_i++;
+					}while(c!=(int)'\n');
+					buffer_c3 = buffer_i-1;
+					if(buffer_c1 == 0) break;
+				//		printf("%d %d %d\n", buffer_c1, buffer_c2, buffer_c3);
+					struct Record *r;
+					r = (struct Record*)malloc(sizeof(struct Record));
+					
+					int int_val=0;
+					for(int i=5; i<buffer_c1; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->id = int_val;
+				//		printf("%d\n", r->id);
+					
+					char* buff_name=malloc(sizeof(char)*(200));
+				//		char buff_name[200];
+					int_val = 0;
+					for(int i=buffer_c1+8; i<buffer_c2; i++, int_val++){
+						buff_name[int_val] = buffer[i];
+					}
+					buff_name[int_val] = '\0';
+					r->name = buff_name;
+					char* buff_add=malloc(sizeof(char)*(1000));
+				//		char buff_add[2000];
+					int_val = 0;
+					for(int i=buffer_c2+12; i< buffer_c3; i++, int_val++){
+						buff_add[int_val] = buffer[i];
+					}
+					buff_add[int_val] = '\0';
+					r->address = buff_add;
+				//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
+					if(head == NULL){
+						head = r;
+						head->next = NULL;
+					}
+					else{
+						if(temp == NULL){
+							temp = r;				
+							head->next = temp;
+							temp->next = NULL;
+						}
+						else{
+							r->next = NULL;
+							temp->next = r;	
+							temp = temp->next;
+						}
+					}
+				}while(stop==0);
+			}
+			else{
+				//EMPLOYEE FILE CASE
+				int c, stop=0;
+				do{
+					char buffer[2000];
+					int buffer_i = 0;
+					int buffer_c1 = 0, buffer_c2 = 0, buffer_c3 = 0, buffer_c4 = 0, buffer_c5 = 0, buffer_c6 = 0; //to keep track of values
+					do{
+					c = fgetc(fp);
+					if(feof(fp)){
+						stop = 1;
+						break;
+					}
+					buffer[buffer_i] = (char) c;
+					if(buffer[buffer_i] == ','){
+						if(buffer_c5 == 0){
+							if(buffer_c4 > 0){
+									buffer_c5 = buffer_i;
+							}
+							else{
+								if(buffer_c3 > 0){
+									buffer_c4 = buffer_i;
+								}
+								else{
+									if(buffer_c2 > 0){
+										buffer_c3 = buffer_i;
+									}
+									else{
+										if(buffer_c1 > 0){
+											buffer_c2 = buffer_i;
+										}
+										else{
+											buffer_c1 = buffer_i;
+										}
+									}
+								}
+							}
+						}
+					}
+					buffer_i++;
+					}while(c!=(int)'\n');
+					buffer_c6 = buffer_i-1;
+					if(buffer_c1 == 0) break;
+					struct Record *r;
+					r = (struct Record*)malloc(sizeof(struct Record));
+					int int_val=0;
+					for(int i=4; i<buffer_c1; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->id = int_val;
+				//		printf("%d\n", r->id);
+					
+					char* buff_name=malloc(sizeof(char)*(200));
+				//		char buff_name[200];
+					int_val = 0;
+					for(int i=buffer_c1+8; i<buffer_c2; i++, int_val++){
+						buff_name[int_val] = buffer[i];
+					}
+					buff_name[int_val] = '\0';
+					r->name = buff_name;
+					int_val=0;
+					for(int i=buffer_c2+7; i<buffer_c3; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->egae = int_val;
+					int_val=0;
+					for(int i=buffer_c3+9; i<buffer_c4; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->salary = int_val;
+					int_val=0;
+					for(int i=buffer_c4+9; i<buffer_c5; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->deptno = int_val;
+					char* buff_add=malloc(sizeof(char)*(1000));
+				//		char buff_add[2000];
+					int_val = 0;
+					for(int i=buffer_c5+11; i< buffer_c6; i++, int_val++){
+						buff_add[int_val] = buffer[i];
+					}
+					buff_add[int_val] = '\0';
+					r->address = buff_add;
+				//		printf("%d %s %d %d %d\n", r->id, r->name, r->egae, r->salary, r->deptno);
+				//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
+					if(head == NULL){
+						head = r;
+						head->next = NULL;
+					}
+					else{
+						if(temp == NULL){
+							temp = r;				
+							head->next = temp;
+							temp->next = NULL;
+						}
+						else{
+							r->next = NULL;
+							temp->next = r;	
+							temp = temp->next;
+						}
+					}
+				}while(stop==0);
+			}
+			fclose(fp);
+			temp = head;
+			while(temp!=NULL){
+				int eval = 0;
+				ctemp = chead;
+				while(ctemp!=NULL){
+					int curr_eval = 0;
+					if(strcmp(ctemp->right->field, "dnum")==0){
+						// CODE TO VALID THIS RECORD, IF VALID
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->id){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->id){
+									if(ctemp->right->max_val>=temp->id){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "dname")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->name)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->name)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					if(strcmp(ctemp->right->field, "dlocation")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->address)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->address)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+					 }
+					if(strcmp(ctemp->right->field, "eid")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->id){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->id){
+									if(ctemp->right->max_val>=temp->id){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "ename")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->name)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->name)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					if(strcmp(ctemp->right->field, "egae")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->egae){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->egae){
+									if(ctemp->right->max_val>=temp->egae){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "eaddress")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->address)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->address)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					if(strcmp(ctemp->right->field, "salary")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->salary){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->salary){
+									if(ctemp->right->max_val>=temp->salary){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "deptno")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->deptno){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->deptno){
+									if(ctemp->right->max_val>=temp->deptno){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					//printf("%d %s \n", chead->type, chead->right->field);
+					if(ctemp->type == 2){
+						//OR type
+						if(curr_eval==1){
+							eval=1;
+							break;
+						}
+					}
+					if(ctemp->type == 1){
+						//AND type
+						if(curr_eval==0){
+							eval=0;
+							break;
+						}
+					}
+					if(ctemp->type == 0){
+						eval=curr_eval;
+						break;
+					}
+					ctemp = ctemp->left;
+				}
+				//add to results OR tresults
+				if(eval==1){
+					if(results==NULL){
+						struct Record *r;
+						r = (struct Record*)malloc(sizeof(struct Record));
+						r->id = temp->id;
+						r->name = temp->name;
+						r->address = temp->address;
+						r->egae = temp->egae;
+						r->salary = temp->salary;
+						r->deptno = temp->deptno;
+						r->next = NULL;
+						if(strcmp(id, "dnum")==0){
+							r->id = val;
+						}
+						if(strcmp(id, "eid")==0){
+							r->id = val;
+						}
+						if(strcmp(id, "egae")==0){
+							r->egae = val;
+						}
+						if(strcmp(id, "salary")==0){
+							r->salary = val;
+						}
+						if(strcmp(id, "deptno")==0){
+							r->deptno = val;
+						}						
+						results=r;
+					}else{
+						if(tresults==NULL){
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							if(strcmp(id, "dnum")==0){
+								r->id = val;
+							}
+							if(strcmp(id, "eid")==0){
+								r->id = val;
+							}
+							if(strcmp(id, "egae")==0){
+								r->egae = val;
+							}
+							if(strcmp(id, "salary")==0){
+								r->salary = val;
+							}
+							if(strcmp(id, "deptno")==0){
+								r->deptno = val;
+							}
+							tresults=r;
+							results->next= tresults;
+						}else{
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							if(strcmp(id, "dnum")==0){
+								r->id = val;
+							}
+							if(strcmp(id, "eid")==0){
+								r->id = val;
+							}
+							if(strcmp(id, "egae")==0){
+								r->egae = val;
+							}
+							if(strcmp(id, "salary")==0){
+								r->salary = val;
+							}
+							if(strcmp(id, "deptno")==0){
+								r->deptno = val;
+							}
+							tresults->next=r;
+							tresults = tresults->next;
+						}
+					}
+				}
+				else{
+					if(results==NULL){
+						struct Record *r;
+						r = (struct Record*)malloc(sizeof(struct Record));
+						r->id = temp->id;
+						r->name = temp->name;
+						r->address = temp->address;
+						r->egae = temp->egae;
+						r->salary = temp->salary;
+						r->deptno = temp->deptno;
+						r->next = NULL;
+						results=r;
+					}else{
+						if(tresults==NULL){
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							tresults=r;
+							results->next= tresults;
+						}else{
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							tresults->next=r;
+							tresults = tresults->next;
+						}
+					}
+				}
+				temp = temp->next;
+				}
+			// All updated records in results
+			fp = fopen(fname, "w");
+			while(results!=NULL){
+				if(strcmp(fname, "DEPT.txt")==0){
+						fprintf(fp, "dnum %d, ",results->id);
+						fprintf(fp, "dname %s, ", results->name);
+						fprintf(fp, "dlocation %s\n", results->address);
+				}
+				else{
+						fprintf(fp, "eid %d, ",results->id);
+						fprintf(fp, "ename %s, ",results->name);
+						fprintf(fp, "egae %d, ", results->egae);
+						fprintf(fp, "salary %d, ",results->salary);
+						fprintf(fp, "deptno %d, ", results->deptno);
+						fprintf(fp, "eaddress %s\n",results->address);
+				}
+			}
+			fclose(fp);
+		}
+  | S DELETE S FROM S ID S WHERE S CONDITIONS S {
+			char* fname=malloc(sizeof(char)*(strlen($6)+4)); strcpy(fname, $6); strcat(fname, ".txt"); //printf("%s", fname);
+			//Initialize data
+			FILE *fp;
+			fp = fopen(fname, "r");
+			if(strcmp(fname, "DEPT.txt")==0){// INSERT FILE CHECK HERE [EMP, DEPT] TO BE DEALT SEPARATELY
+				int c, stop=0;
+				do{
+					char buffer[2000];
+					int buffer_i = 0;
+					int buffer_c1 = 0, buffer_c2 = 0, buffer_c3 = 0; //to keep track of values
+					do{
+					c = fgetc(fp);
+					if(feof(fp)){
+						stop = 1;
+						break;
+					}
+					buffer[buffer_i] = (char) c;
+					if(buffer[buffer_i] == ','){
+						if(buffer_c2 == 0){
+							if(buffer_c1 > 0){
+								buffer_c2 = buffer_i;
+							}
+							else{
+								buffer_c1 = buffer_i;
+							}
+						}
+					}
+				//		printf("%c", c);
+					buffer_i++;
+					}while(c!=(int)'\n');
+					buffer_c3 = buffer_i-1;
+					if(buffer_c1 == 0) break;
+				//		printf("%d %d %d\n", buffer_c1, buffer_c2, buffer_c3);
+					struct Record *r;
+					r = (struct Record*)malloc(sizeof(struct Record));
+					
+					int int_val=0;
+					for(int i=5; i<buffer_c1; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->id = int_val;
+				//		printf("%d\n", r->id);
+					
+					char* buff_name=malloc(sizeof(char)*(200));
+				//		char buff_name[200];
+					int_val = 0;
+					for(int i=buffer_c1+8; i<buffer_c2; i++, int_val++){
+						buff_name[int_val] = buffer[i];
+					}
+					buff_name[int_val] = '\0';
+					r->name = buff_name;
+					char* buff_add=malloc(sizeof(char)*(1000));
+				//		char buff_add[2000];
+					int_val = 0;
+					for(int i=buffer_c2+12; i< buffer_c3; i++, int_val++){
+						buff_add[int_val] = buffer[i];
+					}
+					buff_add[int_val] = '\0';
+					r->address = buff_add;
+				//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
+					if(head == NULL){
+						head = r;
+						head->next = NULL;
+					}
+					else{
+						if(temp == NULL){
+							temp = r;				
+							head->next = temp;
+							temp->next = NULL;
+						}
+						else{
+							r->next = NULL;
+							temp->next = r;	
+							temp = temp->next;
+						}
+					}
+				}while(stop==0);
+			}
+			else{
+				//EMPLOYEE FILE CASE
+				int c, stop=0;
+				do{
+					char buffer[2000];
+					int buffer_i = 0;
+					int buffer_c1 = 0, buffer_c2 = 0, buffer_c3 = 0, buffer_c4 = 0, buffer_c5 = 0, buffer_c6 = 0; //to keep track of values
+					do{
+					c = fgetc(fp);
+					if(feof(fp)){
+						stop = 1;
+						break;
+					}
+					buffer[buffer_i] = (char) c;
+					if(buffer[buffer_i] == ','){
+						if(buffer_c5 == 0){
+							if(buffer_c4 > 0){
+									buffer_c5 = buffer_i;
+							}
+							else{
+								if(buffer_c3 > 0){
+									buffer_c4 = buffer_i;
+								}
+								else{
+									if(buffer_c2 > 0){
+										buffer_c3 = buffer_i;
+									}
+									else{
+										if(buffer_c1 > 0){
+											buffer_c2 = buffer_i;
+										}
+										else{
+											buffer_c1 = buffer_i;
+										}
+									}
+								}
+							}
+						}
+					}
+					buffer_i++;
+					}while(c!=(int)'\n');
+					buffer_c6 = buffer_i-1;
+					if(buffer_c1 == 0) break;
+					struct Record *r;
+					r = (struct Record*)malloc(sizeof(struct Record));
+					int int_val=0;
+					for(int i=4; i<buffer_c1; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->id = int_val;
+				//		printf("%d\n", r->id);
+					
+					char* buff_name=malloc(sizeof(char)*(200));
+				//		char buff_name[200];
+					int_val = 0;
+					for(int i=buffer_c1+8; i<buffer_c2; i++, int_val++){
+						buff_name[int_val] = buffer[i];
+					}
+					buff_name[int_val] = '\0';
+					r->name = buff_name;
+					int_val=0;
+					for(int i=buffer_c2+7; i<buffer_c3; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->egae = int_val;
+					int_val=0;
+					for(int i=buffer_c3+9; i<buffer_c4; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->salary = int_val;
+					int_val=0;
+					for(int i=buffer_c4+9; i<buffer_c5; i++){
+						int_val *= 10;
+						int_val += buffer[i] - '0';
+					}
+					r->deptno = int_val;
+					char* buff_add=malloc(sizeof(char)*(1000));
+				//		char buff_add[2000];
+					int_val = 0;
+					for(int i=buffer_c5+11; i< buffer_c6; i++, int_val++){
+						buff_add[int_val] = buffer[i];
+					}
+					buff_add[int_val] = '\0';
+					r->address = buff_add;
+				//		printf("%d %s %d %d %d\n", r->id, r->name, r->egae, r->salary, r->deptno);
+				//		printf("%d| |%s| |%s\n", r->id, r->name, r->address);
+					if(head == NULL){
+						head = r;
+						head->next = NULL;
+					}
+					else{
+						if(temp == NULL){
+							temp = r;				
+							head->next = temp;
+							temp->next = NULL;
+						}
+						else{
+							r->next = NULL;
+							temp->next = r;	
+							temp = temp->next;
+						}
+					}
+				}while(stop==0);
+			}
+			fclose(fp);
+			temp = head;
+			while(temp!=NULL){
+				int eval = 0;
+				ctemp = chead;
+				while(ctemp!=NULL){
+					int curr_eval = 0;
+					
+					if(strcmp(ctemp->right->field, "dnum")==0){
+						// CODE TO VALID THIS RECORD, IF VALID
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->id){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->id){
+									if(ctemp->right->max_val>=temp->id){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "dname")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->name)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->name)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					if(strcmp(ctemp->right->field, "dlocation")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->address)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->address)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+					 }
+					if(strcmp(ctemp->right->field, "eid")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->id){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->id){
+									if(ctemp->right->max_val>=temp->id){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "ename")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->name)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->name)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					if(strcmp(ctemp->right->field, "egae")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->egae){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->egae){
+									if(ctemp->right->max_val>=temp->egae){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "eaddress")==0){
+						if(ctemp->right->max_val==1){
+							if(strcmp(ctemp->right->ex_val, temp->address)==1){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(strcmp(ctemp->right->ex_val, temp->address)==0){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+							}
+						}
+					if(strcmp(ctemp->right->field, "salary")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->salary){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->salary){
+									if(ctemp->right->max_val>=temp->salary){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					if(strcmp(ctemp->right->field, "deptno")==0){
+						if(ctemp->right->max_val==-1){
+							if(ctemp->right->min_val!=temp->deptno){
+								curr_eval=1;
+							}else{
+								curr_eval=0;
+							}
+						}else{
+							if(ctemp->right->min_val<=temp->deptno){
+									if(ctemp->right->max_val>=temp->deptno){
+										curr_eval=1;
+									}else{
+										curr_eval=0;
+									}
+								}else{
+									curr_eval=0;
+								}
+							}
+						}
+					//printf("%d %s \n", chead->type, chead->right->field);
+					if(ctemp->type == 2){
+						//OR type
+						if(curr_eval==1){
+							eval=1;
+							break;
+						}
+					}
+					if(ctemp->type == 1){
+						//AND type
+						if(curr_eval==0){
+							eval=0;
+							break;
+						}
+					}
+					if(ctemp->type == 0){
+						eval=curr_eval;
+						break;
+					}
+					ctemp = ctemp->left;
+				}
+				//add to results OR tresults
+				if(eval==0){
+					if(results==NULL){
+						struct Record *r;
+						r = (struct Record*)malloc(sizeof(struct Record));
+						r->id = temp->id;
+						r->name = temp->name;
+						r->address = temp->address;
+						r->egae = temp->egae;
+						r->salary = temp->salary;
+						r->deptno = temp->deptno;
+						r->next = NULL;
+						results=r;
+					}else{
+						if(tresults==NULL){
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							tresults=r;
+							results->next= tresults;
+						}else{
+							struct Record *r;
+							r = (struct Record*)malloc(sizeof(struct Record));
+							r->id = temp->id;
+							r->name = temp->name;
+							r->address = temp->address;
+							r->egae = temp->egae;
+							r->salary = temp->salary;
+							r->deptno = temp->deptno;
+							r->next = NULL;
+							tresults->next=r;
+							tresults = tresults->next;
+						}
+					}
+				}
+				temp = temp->next;
+				}
+				fp = fopen(fname, "w");
+				while(results!=NULL){
+					if(strcmp(fname, "DEPT.txt")==0){
+							fprintf(fp, "dnum %d, ",results->id);
+							fprintf(fp, "dname %s, ", results->name);
+							fprintf(fp, "dlocation %s\n", results->address);
+					}
+					else{
+							fprintf(fp, "eid %d, ",results->id);
+							fprintf(fp, "ename %s, ",results->name);
+							fprintf(fp, "egae %d, ", results->egae);
+							fprintf(fp, "salary %d, ",results->salary);
+							fprintf(fp, "deptno %d, ", results->deptno);
+							fprintf(fp, "eaddress %s\n",results->address);
+					}
+				}
+				fclose(fp);
+		}
   ;
 VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
 	// ###### WORKS FINE BOTH INCLUSIVE###### 
@@ -643,6 +2110,7 @@ VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
 	$$=s;
     }
 FIELDS: FIELDS S COMMA S ID {
+	// ###### WORKS FINE ######
 	//HARDCODED VALUES FOR EACH STRCMP
 	char* id = malloc(sizeof(char)*(strlen($5))+1);
 	id = $5;
@@ -707,9 +2175,7 @@ FIELDS: FIELDS S COMMA S ID {
 		}
 		}
   ;
-NEWVAL: ID {/**/}
-  | NUM {/**/}
-  ;
+
 CONDITIONS: CONDITIONS S AND S CONDITION{
 	struct Conditions *cns;
 	cns = (struct Conditions*)malloc(sizeof(struct Conditions));
