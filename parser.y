@@ -1073,6 +1073,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				results = results->next;
 			}
 			fclose(fp);
+			printf("Succesfully updated...\n");
 		}
 	| S UPDATE S ID S SET S ID S TO S NUM S WHERE S CONDITIONS S {
 			char* fname=malloc(sizeof(char)*(strlen($4)+4)); strcpy(fname, $4); strcat(fname, ".txt"); //printf("%s", fname);
@@ -1594,6 +1595,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				results = results->next;
 			}
 			fclose(fp);
+			printf("Succesfully updated...\n");
 		}
   | S DELETE S FROM S ID S WHERE S CONDITIONS S {
 			char* fname=malloc(sizeof(char)*(strlen($6)+4)); strcpy(fname, $6); strcat(fname, ".txt"); //printf("%s", fname);
@@ -2028,6 +2030,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 					results = results->next;
 				}
 				fclose(fp);
+				printf("Succesfully deleted...\n");
 		}
   ;
 VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
@@ -2340,11 +2343,10 @@ void main()
 {
 printf("enter statement : \n");
 yyparse();
-printf("valid statement");
 exit(0);
 }
 void yyerror()
 {
-  printf("invalid statement");
+  printf("Invalid Query");
 exit(0);
 }
