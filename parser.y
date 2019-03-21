@@ -561,10 +561,10 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 			char* fname=malloc(sizeof(char)*(strlen($4)+4)); strcpy(fname, $4); strcat(fname, ".txt"); //printf("%s", fname);
 			char* id = malloc(sizeof(char)*(strlen($8)+1));
 			id = $8;
-			char* val_t=malloc(sizeof(char)*(strlen($5)+1));
+			char* val_t=malloc(sizeof(char)*(strlen($12)+1));
 			val_t = $12;
-			char* val=malloc(sizeof(char)*(strlen($5)-1));	
-			for(int i=0;i<strlen($5)-2;i++){
+			char* val=malloc(sizeof(char)*(strlen($12)-1));	
+			for(int i=0;i<strlen($12)-2;i++){
 					val[i] = val_t[i+1];
 				}
 			FILE *fp;
