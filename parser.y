@@ -1077,7 +1077,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 			char* fname=malloc(sizeof(char)*(strlen($4)+4)); strcpy(fname, $4); strcat(fname, ".txt"); //printf("%s", fname);
 			char* id = malloc(sizeof(char)*(strlen($8)+1));
 			id = $8;
-			val = $12;
+			int val = $12;
 			FILE *fp;
 			fp = fopen(fname, "r");
 			if(strcmp(fname, "DEPT.txt")==0){// INSERT FILE CHECK HERE [EMP, DEPT] TO BE DEALT SEPARATELY
