@@ -1070,6 +1070,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 						fprintf(fp, "deptno %d, ", results->deptno);
 						fprintf(fp, "eaddress %s\n",results->address);
 				}
+				results = results->next;
 			}
 			fclose(fp);
 		}
@@ -1590,6 +1591,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 						fprintf(fp, "deptno %d, ", results->deptno);
 						fprintf(fp, "eaddress %s\n",results->address);
 				}
+				results = results->next;
 			}
 			fclose(fp);
 		}
@@ -2023,6 +2025,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 							fprintf(fp, "deptno %d, ", results->deptno);
 							fprintf(fp, "eaddress %s\n",results->address);
 					}
+					results = results->next;
 				}
 				fclose(fp);
 		}
