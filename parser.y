@@ -768,27 +768,35 @@ CONDITIONS: CONDITIONS S AND S CONDITION{
 	}
 	}
   ;
-CONDITION: ID S EQUAL S ID {
+CONDITION: ID S EQUAL S VALUE {
 	struct Cond *c;
 	c = (struct Cond*)malloc(sizeof(struct Cond));
 	char* name=malloc(sizeof(char)*(strlen($1)+1));
 	name = $1;
 	c->field = name;
-	char* expected_val = malloc(sizeof(char)*(strlen($5)+1));
-	expected_val = $5;
+	char* expected_val_t=malloc(sizeof(char)*(strlen($5)+1));
+	expected_val_t = $5;
+	char* expected_val=malloc(sizeof(char)*(strlen($5)-1));	
+	for(int i=0;i<strlen($5)-2;i++){
+		expected_val[i] = expected_val_t[i+1];
+	}
 	c->min_val = 0;
 	c->max_val = 0;
 	c->ex_val = expected_val;
 	$$=c;		
 	}
-  | ID S NE S ID {
+  | ID S NE S VALUE {
 	struct Cond *c;
 	c = (struct Cond*)malloc(sizeof(struct Cond));
 	char* name=malloc(sizeof(char)*(strlen($1)+1));
 	name = $1;
 	c->field = name;
-	char* expected_val = malloc(sizeof(char)*(strlen($5)+1));
-	expected_val = $5;
+	char* expected_val_t=malloc(sizeof(char)*(strlen($5)+1));
+	expected_val_t = $5;
+	char* expected_val=malloc(sizeof(char)*(strlen($5)-1));	
+	for(int i=0;i<strlen($5)-2;i++){
+		expected_val[i] = expected_val_t[i+1];
+	}
 	c->min_val = 0;
 	c->max_val = 1; // to ensure inequality strcmp(...,...) == c->max_val
 	c->ex_val = expected_val;
