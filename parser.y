@@ -474,71 +474,47 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				temp = temp->next;
 				}
 			//print fields here
-			int dot=0;
-			if(display[0]==1){
-				if(strcmp(fname, "DEPT.txt")==0){
-					printf("DNUM ");
-					dot+=5;
-				}
-				else{
-					printf("EID ");
-					dot+=4;
-				}
-			}
-			if(display[1]==1){
-				if(strcmp(fname, "DEPT.txt")==0){
-					printf("DNAME ");
-					dot+=6;
-				}else{
-					printf("ENAME ");
-					dot+=6;
-				}
-			}
-			if(display[2]==1){
-				if(strcmp(fname, "DEPT.txt")==0){
-					printf("DLOCATION ");
-					dot+=10;
-				}else{
-					printf("EADDRESS ");
-					dot+=9;
-				}
-			}
-			if(display[3]==1){
-				printf("EGAE ");
-					dot+=5;
-			}
-			if(display[4]==1){
-				printf("SALARY ");
-					dot+=7;
-			}
-			if(display[5]==1){
-				printf("DEPTNO ");
-					dot+=7;
-			}
-			printf("\n");
-			for(int i=0;i<dot;i++){
-				printf("-");
-			}
-			printf("\n");
+			printf("-----------------\n");
+			printf("| QUERY RESULTS |\n");
+			printf("-----------------\n");
 			//Printing results
+			int count=1;
 			while(results!=NULL){
+				printf("RESULT #%d:\n",count);
+				count++;
 				if(display[0]==1){
-					printf("%d ",results->id);
+					if(strcmp(fname, "DEPT.txt")==0){
+						printf(" DNUM: ");
+					}
+					else{
+						printf(" EID: ");
+					}
+					printf(" %d \n",results->id);
 				}
 				if(display[1]==1){
-					printf("%s ", results->name);
+					if(strcmp(fname, "DEPT.txt")==0){
+						printf(" DNAME: ");
+					}else{
+						printf(" ENAME: ");
+					}
+					printf(" %s \n", results->name);
 				}
 				if(display[2]==1){
-					printf("%s ", results->address);
+					if(strcmp(fname, "DEPT.txt")==0){
+						printf(" DLOCATION: ");
+					}else{
+						printf(" EADDRESS: ");
+					}
+					printf(" %s \n", results->address);
 				}
 				if(display[3]==1){
-					printf("%d ",results->egae);
+					printf(" EGAE:  %d \n",results->egae);
 				}
 				if(display[4]==1){
-					printf("%d ",results->salary);
+					printf(" SALARY:  %d \n",results->salary);
 				}
 				if(display[5]==1){
-					printf("%d ",results->deptno);
+					printf(" DEPTNO:  %d \n",results->deptno);
 				}
 				printf("\n");
 				if(results->next == NULL){
@@ -554,7 +530,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 		FILE *fp;
 		fp = fopen(fname, "a");
 		fprintf(fp, "%s\n",$4);
-		printf("Record succesfully inserted...\n");
+		printf("\nRecord succesfully inserted...\n");
 		fclose(fp);
 		}
   | S UPDATE S ID S SET S ID S TO S VALUE S WHERE S CONDITIONS S {
@@ -1073,7 +1049,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				results = results->next;
 			}
 			fclose(fp);
-			printf("Succesfully updated...\n");
+			printf("\nSuccesfully updated...\n");
 		}
 	| S UPDATE S ID S SET S ID S TO S NUM S WHERE S CONDITIONS S {
 			char* fname=malloc(sizeof(char)*(strlen($4)+4)); strcpy(fname, $4); strcat(fname, ".txt"); //printf("%s", fname);
@@ -1595,7 +1571,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 				results = results->next;
 			}
 			fclose(fp);
-			printf("Succesfully updated...\n");
+			printf("\nSuccesfully updated...\n");
 		}
   | S DELETE S FROM S ID S WHERE S CONDITIONS S {
 			char* fname=malloc(sizeof(char)*(strlen($6)+4)); strcpy(fname, $6); strcat(fname, ".txt"); //printf("%s", fname);
@@ -2030,7 +2006,7 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 					results = results->next;
 				}
 				fclose(fp);
-				printf("Succesfully deleted...\n");
+				printf("\nSuccesfully deleted...\n");
 		}
   ;
 VALUES: NUM S COMMA S VALUE S COMMA S VALUE {
