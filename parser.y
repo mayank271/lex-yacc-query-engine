@@ -479,6 +479,9 @@ stmt: S GET S FIELDS S FROM S ID S WHERE S CONDITIONS S {
 			printf("-----------------\n");
 			//Printing results
 			int count=1;
+			if(results == NULL){
+				printf("No results found\n");
+			}
 			while(results!=NULL){
 				printf("RESULT #%d:\n",count);
 				count++;
